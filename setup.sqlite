@@ -1,0 +1,38 @@
+CREATE TABLE IF NOT EXISTS Location (
+    locationID INTEGER PRIMARY KEY CHECK(LocationID = 0),
+    topicID INTEGER,
+    threadID INTEGER,
+    noteID INTEGER
+);
+
+INSERT INTO Location (LocationID, topicID, threadID, noteID) VALUES (0, 1, 1, 0);
+
+CREATE TABLE IF NOT EXISTS Topic (
+    topicID INTEGER PRIMARY KEY AUTOINCREMENT,
+    title text NOT NULL,
+    timeCreated datetime NOT NULL,
+    lastUpdated datetime NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS Thread (
+    threadID INTEGER PRIMARY KEY AUTOINCREMENT,
+    topicID INTEGER NOT NULL,
+    title text NOT NULL,
+    timeCreated datetime NOT NULL,
+    lastUpdated datetime NOT NULL,
+    FOREIGN KEY(topicID) REFERENCES Topic (topicID)
+);
+
+CREATE TABLE IF NOT EXISTS Note (
+    noteID INTEGER PRIMARY KEY AUTOINCREMENT,
+    threadID INTEGER NOT NULL,
+    title text NOT NULL,
+    directory text NOT NULL,
+    body text NOT NULL,
+    timeCreated datetime NOT NULL,
+    lastUpdated datetime NOT NULL,
+    FOREIGN KEY(threadID) REFERENCES Thread (threadID)
+);
+
+
+
