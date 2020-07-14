@@ -18,6 +18,7 @@ public enum ActionManager {
 
         this.dbManager = DBManager.INSTANCE;
         this.locationManager = LocationManager.INSTANCE;
+        this.dbManager.retrieveLocation();
         this.textEditorManager = TextEditorManager.INSTANCE;
 
     }
@@ -49,6 +50,7 @@ public enum ActionManager {
                 break;
             case "tree":
                 this.printTree();
+                break;
             default:
                 System.out.printf("Unrecognized action: %s\n", action);
 

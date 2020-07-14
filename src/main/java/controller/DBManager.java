@@ -1,25 +1,26 @@
 package controller;
 
 import java.io.*;
-import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javafx.application.Application;
 import model.*;
 import org.apache.ibatis.jdbc.ScriptRunner;
+import utils.FileSystemUtils;
 
 public enum DBManager {
 
     INSTANCE;
 
+    private String homeDir = "";
     private String dbDir = "database/";
-    private String dbFilename = "JoeyNote.db";
-    private String setupSqlFilename = "setup.sqlite";
-    private String url = "jdbc:sqlite:" + dbDir + dbFilename;
+    private String dbFile = "JoeyNote.db";
+    private String setupFile = "setup.sqlite";
+    private String url = "jdbc:sqlite:";
 
     private Connection conn = null;
 
@@ -31,13 +32,19 @@ public enum DBManager {
 
     private void init() {
 
+        this.homeDir = FileSystemUtils.getExecutionDirectory();
+        this.dbDir = Paths.get(this.homeDir, this.dbDir).toString();
+        this.dbFile = Paths.get(this.dbDir, this.dbFile).toString();
+        this.setupFile = Paths.get(this.homeDir, this.setupFile).toString();
+        this.url = this.url + this.dbFile;
+
         File dir = new File(this.dbDir);
         if(!dir.exists())
             dir.mkdirs();
 
-        File db = new File(this.dbDir + this.dbFilename);
+        File db = new File(this.dbFile);
         if(!db.exists()) {
-            this.runScript(this.setupSqlFilename);
+            this.runScript(this.setupFile);
             this.retrieveLocation();
             this.createNewTopic(new Topic("ROOT"));
             this.createNewThread(new TopicThread("ROOT"));
